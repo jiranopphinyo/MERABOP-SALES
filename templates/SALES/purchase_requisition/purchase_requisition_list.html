@@ -1,0 +1,156 @@
+{% extends 'MAIN/main.html' %}
+{% load static %}
+{% load humanize %}
+{% load SALES_purchase_requisition_templatetags %}
+
+
+{% block title %} {{ company.brand_name }} | Purchase Requisition List {% endblock title %}
+    
+
+{% block css %}
+<link href="{% static 'assets/css/vendor/dataTables.bootstrap4.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'assets/css/vendor/responsive.bootstrap4.css' %}" rel="stylesheet" type="text/css" />
+{% endblock css %}
+
+
+{% block brand %} {{ company.brand_name }} {% endblock brand %}
+    
+
+{% block content %}
+{% if perms.SALES.view_purchaserequisition %}
+<div class="content">
+                        
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'SALES:purchase_requisition_list' %}">Purchase Requisition</a></li>
+                        <li class="breadcrumb-item active">Lists</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Purchase Requisitions</h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-lg-9">
+                            <form class="form" method="POST">
+                                {% csrf_token %}
+                                <div class="form-group mb-2">
+                                    <label class="sr-only">Search</label>
+                                    <input type="search" class="form-control" name="search_text" placeholder="Search...">
+                                </div>
+                            </form>                            
+                        </div>
+                        
+                        {% if perms.SALES.add_purchaserequisition %}
+                        <div class="col-lg-3">
+                            <div class="text-lg-right">
+                                <a class="btn btn-primary mb-2 mr-2" href="{% url 'SALES:purchase_requisition_create' %}"><i class="mdi mdi-plus mr-1"></i>Add Purchase Requisition</a>
+                            </div>
+                        </div>
+                        {% endif %}
+                            
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-centered table-hover mb-0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Date</th>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Status</th>
+                                    <th style="width: 125px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                {% for item in purchase_requisitions %}
+                                <tr>
+                                    <td><a href="{% url 'SALES:purchase_requisition_detail' item.purchase_requisition.id %}" class="text-body font-weight-bold">#{{ item.purchase_requisition.id }}</a></td>
+                                    <td> {{ item.purchase_requisition.date|date:"F d, Y" }} </td>
+                                    <td> {{ item.product.name }} </td>
+                                    <td> {{ item.quantity|floatformat:"2"|intcomma }} </td>
+                                    <td> {{ item.unit_price|floatformat:"2"|intcomma }} </td>
+                                    <td><span class="badge badge-primary"> {% get_last_purchase_requisition_status_log item.purchase_requisition.id as status %} {{ status }} </span></td>
+                                    <td>
+                                        
+                                        {% if perms.SALES.view_purchaserequisition %}
+                                        <a href="{% url 'SALES:purchase_requisition_detail' item.purchase_requisition.id %}" class="action-icon"> <i class="mdi mdi-eye"></i></a>
+                                        {% endif %}
+                                        {% if perms.SALES.change_purchaserequisition %}
+                                        <a href="#" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                        {% endif %}
+                                        {% if perms.SALES.delete_purchaserequisition %}
+                                        <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-delete"></i></a>
+                                        {% endif %}
+                                            
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% else %}
+<div class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Permission Denied</a></li>
+                        <li class="breadcrumb-item active">Purchase Requisition</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Purchase Requisitions</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="text-center">
+                <h3 class="">Permission Denied !</h3>
+                <p class="text-muted mt-3">Sorry, you don't have permission to view purchase requisition data.</p>
+                <a class="btn btn-primary btn-sm mt-2" href="/"><i class="mdi mdi-home mr-1"></i>Back To Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}
+
+
+{% block script %}
+<!-- third party js -->
+<script src="{% static 'assets/js/vendor/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/dataTables.bootstrap4.js' %}"></script>
+<script src="{% static 'assets/js/vendor/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/apexcharts.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/dataTables.checkboxes.min.js' %}"></script>
+<!-- third party js ends -->
+
+<!-- demo app -->
+<script src="{% static 'assets/js/pages/demo.sellers.js' %}"></script>
+<!-- end demo js-->
+{% endblock script %}

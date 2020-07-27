@@ -1,0 +1,150 @@
+{% extends 'MAIN/main.html' %}
+{% load static %}
+
+
+{% block title %} {{ company.brand_name }} | Customer List {% endblock title %}
+    
+
+{% block css %}
+<link href="{% static 'assets/css/vendor/dataTables.bootstrap4.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'assets/css/vendor/responsive.bootstrap4.css' %}" rel="stylesheet" type="text/css" />
+{% endblock css %}
+
+
+{% block brand %} {{ company.brand_name }} {% endblock brand %}
+    
+
+{% block content %}
+{% if perms.SALES.view_customer %}
+<div class="content">
+                        
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'SALES:customer_list' %}">Customer</a></li>
+                        <li class="breadcrumb-item active">Lists</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Customers</h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-lg-9">
+                            <form class="form" method="POST">
+                                {% csrf_token %}
+                                <div class="form-group mb-2">
+                                    <label class="sr-only">Search</label>
+                                    <input type="search" class="form-control" name="search_text" placeholder="Search...">
+                                </div>
+                            </form>                            
+                        </div>
+                        
+                        {% if perms.SALES.add_customer %}
+                        <div class="col-lg-3">
+                            <div class="text-lg-right">
+                                <a class="btn btn-primary mb-2 mr-2" href="{% url 'SALES:customer_create' %}"><i class="mdi mdi-plus mr-1"></i>Add Customer</a>
+                            </div>
+                        </div>
+                        {% endif %}
+                            
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-centered table-hover mb-0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Customer ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th style="width: 125px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                {% for customer in customers %}
+                                <tr>
+                                    <td><a href="{% url 'SALES:customer_detail' customer.id %}" class="text-body font-weight-bold">#{{ customer.id }}</a></td>
+                                    <td> {{ customer.name }} </td>
+                                    <td> {{ customer.email }} </td>
+                                    <td> {{ customer.phone }} </td>
+                                    <td>
+                                        
+                                        {% if perms.SALES.view_customer %}
+                                        <a href="{% url 'SALES:customer_detail' customer.id %}" class="action-icon"> <i class="mdi mdi-eye"></i></a>
+                                        {% endif %}
+                                        {% if perms.SALES.change_customer %}
+                                        <a href="{% url 'SALES:customer_update' customer.id %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                        {% endif %}
+                                        {% if perms.SALES.delete_customer %}
+                                        <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-delete"></i></a>
+                                        {% endif %}
+                                            
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% else %}
+<div class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Permission Denied</a></li>
+                        <li class="breadcrumb-item active">Customer</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Customers</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="text-center">
+                <h3 class="">Permission Denied !</h3>
+                <p class="text-muted mt-3">Sorry, you don't have permission to view customer data.</p>
+                <a class="btn btn-primary btn-sm mt-2" href="/"><i class="mdi mdi-home mr-1"></i>Back To Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}
+
+
+{% block script %}
+<!-- third party js -->
+<script src="{% static 'assets/js/vendor/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/dataTables.bootstrap4.js' %}"></script>
+<script src="{% static 'assets/js/vendor/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/apexcharts.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/dataTables.checkboxes.min.js' %}"></script>
+<!-- third party js ends -->
+
+<!-- demo app -->
+<script src="{% static 'assets/js/pages/demo.sellers.js' %}"></script>
+<!-- end demo js-->
+{% endblock script %}

@@ -1,0 +1,205 @@
+{% extends 'MAIN/main.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %} {{ company.brand_name }} | {{ quotation.id }} Print {% endblock title %}
+
+
+{% block css %}
+    
+{% endblock css %}
+    
+
+{% block brand %} {{ company.brand_name }} {% endblock brand %}
+    
+
+{% block content %}
+{% if perms.SALES.view_quotation %}
+<div class="content">
+                        
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'SALES:quotation_list' %}">Quotation</a></li>
+                        <li class="breadcrumb-item active">Print</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Print Quotation</h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <!-- Invoice Logo-->
+                    <div class="clearfix">
+                        <div class="float-left mb-3">
+                            <img src="assets/images/logo-light.png" alt="" height="18">
+                        </div>
+                        <div class="float-right">
+                            <h4 class="m-0 d-print-none">Quotation</h4>
+                        </div>
+                    </div>
+
+                    <!-- Invoice Detail-->
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="float-left mt-3">
+                                <p><b>Hello, {{ quotation.customer_contact_person.fullname }}</b></p>
+                                <p class="text-muted font-13">Please find below a cost-breakdown for the recent work completed. Please make payment at your earliest convenience, and do not hesitate to contact me with any questions.</p>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-4 offset-sm-2">
+                            <div class="mt-3 float-sm-right">
+                                <p class="font-13"><strong>Quotation ID: </strong><span class="float-right">#{{ quotation.id }} </span></p>
+                                <p class="font-13"><strong>Quotation Date: </strong><span class="float-right">&nbsp;&nbsp; {{ quotation.date|date:"d/m/Y" }} </span></p>
+                                <p class="font-13"><strong>Valid Until: </strong><span class="float-right"> {{ quotation.valid_until|date:"d/m/Y" }} </span></p>
+                                <p class="font-13"><strong>Delivery in: </strong><span class="float-right"> {{ quotation.estimate_delivery_day }} Days</span></p>
+                                <p class="font-13"><strong>Payment Term: </strong><span class="float-right"> {{ quotation.payment_term }} </span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-sm-4">
+                            <h6>Billing Address</h6>
+                            <address>
+                                {{ quotation.customer.name }} <br>
+                                {{ quotation.customer_billing_address.address_line_1 }} {% if quotation.customer_billing_address.address_line_2 %} {{ quotation.customer_billing_address.address_line_2 }} {% else %}{% endif %} <br>
+                                {{ quotation.customer_billing_address.sub_district }} {{ quotation.customer_billing_address.district }} {{ quotation.customer_billing_address.province }} <br>
+                                {{ quotation.customer_billing_address.postal_code }} {{ quotation.customer_billing_address.country }} <br>
+                                <abbr title="Phone">P:</abbr> {{ quotation.customer_billing_address.phone }}
+                            </address>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <h6>Contact Person</h6>
+                            <address>
+                                {{ quotation.customer_contact_person.fullname }} <br>
+                                {{ quotation.customer_contact_person.job_title }} <br>
+                                <abbr title="Phone">P:</abbr> {{ quotation.customer_contact_person.phone }} <br>
+                                <abbr title="Email">E:</abbr> {{ quotation.customer_contact_person.email }}
+                            </address>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="text-sm-right">
+                                <img src="{% static 'assets/images/barcode.png' %}" alt="barcode-image" class="img-fluid mr-2" />
+                            </div>
+                        </div>
+                    </div>       
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                <table class="table mt-4">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Item</th>
+                                            <th>Quantity</th>
+                                            <th>Unit Price</th>
+                                            <th class="text-right">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for item in quotation_items %}
+                                        <tr>
+                                            <td> {{ forloop.counter }} </td>
+                                            <td>
+                                                <b> {{ item.product.name }} </b> <br/>
+                                                {{ item.product.id }}
+                                            </td>
+                                            <td> {{ item.quantity|floatformat:"2"|intcomma }} </td>
+                                            <td> ฿{{ item.unit_price|floatformat:"2"|intcomma }} </td>
+                                            <td class="text-right"> ฿{{ item.amount|floatformat:"2"|intcomma }} </td>
+                                        </tr>
+                                        {% endfor %}
+                                            
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="clearfix pt-3">
+                                <h6 class="text-muted">Notes:</h6>
+                                <small>
+                                    All accounts are to be paid within 7 days from receipt of
+                                    invoice. To be paid by cheque or credit card or direct payment
+                                    online. If account is not paid within 7 days the credits details
+                                    supplied as confirmation of work undertaken will be charged the
+                                    agreed quoted fee noted above.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="float-right mt-3 mt-sm-0">
+                                <p><b>Sub Total:</b> <span class="float-right"> ฿{{ quotation.sub_total|floatformat:"2"|intcomma }} </span></p>
+                                <p><b>Discount:</b> <span class="float-right"> ฿{{ quotation.discount|floatformat:"2"|intcomma }} </span></p>
+                                <p><b>After Discount:</b> <span class="float-right"> &nbsp;&nbsp; ฿{{ quotation.after_discount|floatformat:"2"|intcomma }} </span></p>
+                                <p><b>VAT (7%):</b> <span class="float-right"> ฿{{ quotation.vat|floatformat:"2"|intcomma }} </span></p>
+                                <h3> ฿{{ quotation.net_total|floatformat:"2"|intcomma }} </h3>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+
+                    <div class="d-print-none mt-4">
+                        <div class="text-right">
+                            <a href="javascript:window.print()" class="btn btn-primary"><i class="mdi mdi-printer"></i> Print</a>
+                            <a href="{% url 'SALES:quotation_detail' quotation.id %}" class="btn btn-outline-secondary">Back</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% else %}
+<div class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Permission Denied</a></li>
+                        <li class="breadcrumb-item active">Quotation</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Print Quotation</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="text-center">
+                <h3 class="">Permission Denied !</h3>
+                <p class="text-muted mt-3">Sorry, you don't have permission to print quotation data.</p>
+                <a class="btn btn-primary btn-sm mt-2" href="/"><i class="mdi mdi-home mr-1"></i>Back To Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}
+    
+
+{% block script %}
+
+{% endblock script %}

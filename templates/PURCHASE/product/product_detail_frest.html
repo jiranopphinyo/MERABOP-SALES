@@ -1,0 +1,305 @@
+{% extends 'MAIN/main.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %} {{ company.brand_name }} | Product Detail - {{ product.id }} {% endblock title %}
+
+
+{% block css %}
+    
+{% endblock css %}
+    
+
+{% block brand %} {{ company.brand_name }} {% endblock brand %}
+    
+
+{% block content %}
+<!-- BEGIN: Content-->
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">
+        
+        {% if perms.PURCHASE.view_product %}
+        <div class="content-header row">
+            <div class="content-header-left col-10 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <h5 class="content-header-title float-left pr-1 mb-0">Product</h5>
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="/"><i class="bx bx-home-alt"></i></a>
+                                </li>
+                                <li class="breadcrumb-item"><a href="{% url 'PURCHASE:product_list' %}">Product</a>
+                                </li>
+                                <li class="breadcrumb-item active"><a href="#"> {{ product.name }} </a>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <!-- users edit start -->
+            <section class="users-edit">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <ul class="nav nav-tabs mb-2" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link d-flex align-items-center active" id="general-tab" data-toggle="tab" href="#general" aria-controls="general" role="tab" aria-selected="true">
+                                        <i class="bx bx-package mr-25"></i><span class="d-none d-sm-block">Product</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link d-flex align-items-center" id="address-tab" data-toggle="tab" href="#address" aria-controls="address" role="tab" aria-selected="false">
+                                        <i class="bx bx-paper-plane mr-25"></i><span class="d-none d-sm-block">Coming Soon</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <!-- BEGIN: GENERAL TAB -->
+                                <div class="tab-pane active fade show" id="general" aria-labelledby="general-tab" role="tabpanel">
+                                    <!-- users edit media object start -->
+                                    <div class="media mb-2">
+                                        <a class="mr-2" href="#">
+                                            <div class="avatar avatar-xl mr-1 bg-secondary">
+                                                <span class="avatar-content">{{ product.name.0|upper }}</span>
+                                            </div>
+                                        </a>
+                                        <div class="media-body">
+                                            <h4 class="media-heading"> Product ID: {{ product.id }} </h4>
+                                            <h4> {{ product.name }} </h4>
+                                            <!-- <div class="col-12 px-0 d-flex">
+                                                <a href="#" class="btn btn-sm btn-primary mr-25">Change</a>
+                                                <a href="#" class="btn btn-sm btn-light-secondary">Reset</a>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            <div class="col-10 offset-1">
+                                                <div class="form-group">
+                                                    <label>Product Name</label>
+                                                    <input type="text" class="form-control" value="{{ product.name }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-10 offset-1">
+                                                <div class="form-group">
+                                                    <label>Packing</label>
+                                                    <input type="text" class="form-control" value="{{ product.get_product_packing }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-10 offset-1">
+                                                <div class="form-group">
+                                                    <label>Packing Material</label>
+                                                    <input type="text" class="form-control" value="{{ product.packing_material }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-10 offset-1">
+                                                <div class="form-group">
+                                                    <label>Cubic Metre</label>
+                                                    <input type="text" class="form-control" value="{{ product.cbm }} m3">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-10 offset-1">
+                                                <div class="form-group">
+                                                    <label>Characteristic</label>
+                                                    <textarea class="form-control" rows=3> {{ product.characteristic }} </textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-10 offset-1">
+                                                <div class="form-group">
+                                                    <label>Supplier</label>
+                                                    <input type="text" class="form-control" value="{{ product.supplier }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-10 offset-1">
+                                                <div class="form-group">
+                                                    <label>Shipped / Manufactured Country</label>
+                                                    <input type="text" class="form-control" value="{{ product.shipped_country }} / {{ product.manufactured_country }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-10 offset-1">
+                                                <div class="form-group">
+                                                    <label>Total Remaining Amount</label>
+                                                    <input type="text" class="form-control" value="{{ product.total_remaining_amount }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-10 offset-1">
+                                                <div class="form-group">
+                                                    <label>Suggested Sales Price</label>
+                                                    <input type="text" class="form-control" value="{{ product.suggested_sales_price }} ฿">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        {% if perms.PURCHASE.change_supplier %}
+                                        <div class="row">
+                                            <div class="col-10 offset-1 d-flex flex-sm-row flex-column justify-content-end mt-1">
+                                                <a href="{% url 'PURCHASE:product_update' product.id %}" class="btn btn-light glow">Edit</a>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                            
+                                    </form>
+                                </div>
+                                <!-- BEGIN: ADDRESS TAB -->
+                                <div class="tab-pane fade show" id="address" aria-labelledby="address-tab" role="tabpanel">
+                                    
+                                    {% if supplier_addresses %}
+                                        {% for supplier_address in supplier_addresses %}
+                                        <form method="POST" class="mb-2">
+                                            
+                                            <div class="row">
+                                                <div class="col-10 offset-1">
+                                                    <h4> {{ supplier_address.address_name }} </h4>
+                                                    <div class="form-group">
+                                                        <label>Address</label>
+                                                        <textarea class="form-control" rows="3">{{ supplier_address.address_line_1 }} {% if supplier_address.address_line_2 %}{{ supplier_address.address_line_2 }},{% else %}{% endif %} {{ supplier_address.sub_district }}, {{ supplier_address.district }}, {{ supplier_address.province }} {{ supplier_address.postal_code }} {{ supplier_address.country.country }}</textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-5 offset-1">
+                                                    <div class="form-group">
+                                                        <label>Tel</label>
+                                                        <input type="text" class="form-control" value="{{ supplier_address.phone }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-5">
+                                                    <div class="form-group">
+                                                        <label>Fax</label>
+                                                        <input type="text" class="form-control" value="{{ supplier_address.fax }}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-10 offset-1 d-flex flex-sm-row flex-column justify-content-end mt-1">
+                                                    
+                                                    {% if perms.PURCHASE.change_supplieraddress %}
+                                                    <a class="btn btn-light glow" href="#">Edit</a>
+                                                    {% endif %}
+                                                        
+                                                </div>
+                                            </div>
+                                        </form>
+                                        {% endfor %}
+                                        <div class="row">
+                                            <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
+                                                {% if perms.PURCHASE.add_supplieraddress %}
+                                                <a class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1" href="#">Add Address</a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                    <div class="alert alert-info alert-dismissible mb-2" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bx bx-info-circle"></i>
+                                            <span>
+                                                You have not added any product information yet. 
+                                                
+                                                {% if perms.PURCHASE.add_supplieraddress %}
+                                                    Please add the product information by click button below.
+                                                {% else %}
+                                                    Please contact those who are allowed to add product information.
+                                                {% endif %}
+                                                    
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-1">
+                                            
+                                            {% if perms.PURCHASE.add_supplieraddress %}
+                                            <a class="btn btn-primary glow mb-1 mb-sm-0 mr-0 mr-sm-1" href="#">Add Information</a>
+                                            {% endif %}
+                                                
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- users edit ends -->
+        </div>
+        {% else %}
+        <div class="content-body">
+            <!-- faq search start -->
+            <section class="faq-search">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card faq-bg bg-transparent box-shadow-0 p-1 p-md-5">
+                            <div class="card-content">
+                                <div class="card-body p-0">
+                                    <h1 class="faq-title text-center mb-3">Sorry, you don't have permission to view</h1>
+                                    <h2 class="faq-title text-center mb-3">PRODUCT DATA !</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- faq search ends -->
+
+            <!-- fab bottom start -->
+            <section class="faq-bottom">
+                <div class="row mb-2">
+                    <div class="col-12 text-center">
+                        <h2 class="faq-subtitle">You still want to view product data?</h2>
+                        <p class="p-2 text-muted font-medium-1">If you want to view product data, you can always contact us. We
+                            will answer to you shortly!</p>
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center mb-5">
+                    <div class="col-sm-12 col-md-4 text-center border rounded p-2 mr-md-2 m-1">
+                        <i class="bx bx-phone-call primary font-large-1 text-muted p-50"></i>
+                        <h5>+ (66) 2 175 2131</h5>
+                        <p class="text-muted font-medium-1"> we are always happy to help!</p>
+                    </div>
+                    <div class="col-sm-12 col-md-4 text-center border color-gray-faq rounded p-2 m-1">
+                        <i class="bx bx-mail-send primary font-large-1 p-50"></i>
+                        <h5><a href="mailto:supports@merabop.com">supports@merabop.com</a></h5>
+                        <p class="text-muted font-medium-1">Best way to get answer faster!</p>
+                    </div>
+                </div>
+            </section>
+            <!-- fab bottom ends -->
+        </div>
+        {% endif %}
+            
+    </div>
+</div>
+<!-- END: Content-->
+{% endblock content %}
+    
+
+{% block script %}
+    
+{% endblock script %}
+    

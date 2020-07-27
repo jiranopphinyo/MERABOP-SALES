@@ -1,0 +1,198 @@
+{% extends 'MAIN/main.html' %}
+{% load static %}
+{% load humanize %}
+{% load WAREHOUSE_product_lot_number_templatetags %}
+
+
+{% block title %} {{ company.brand_name }} | Product Detail - {{ product.id }} {% endblock title %}
+    
+
+{% block css %}
+
+{% endblock css %}
+
+
+{% block brand %} {{ company.brand_name }} {% endblock brand %}
+    
+
+{% block content %}
+{% if perms.PURCHASE.view_product %}
+<div class="content">
+                        
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'PURCHASE:product_list' %}">Product</a></li>
+                        <li class="breadcrumb-item active">Details</li>
+                    </ol>
+                </div>
+                <h4 class="page-title"> {{ product }} </h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <!-- Product image -->
+                            <a href="javascript: void(0);" class="text-center d-block mb-4">
+                                <img src="{% static 'assets/images/products/product-5.jpg' %}" class="img-fluid" style="max-width: 280px;" alt="Product-img" />
+                            </a>
+                        </div> <!-- end col -->
+                        <div class="col-lg-7">
+                            <form class="pl-lg-4">
+                                <!-- Product title -->
+                                <h3 class="mt-0"> {{ product.name }} 
+                                    
+                                    {% if perms.PURCHASE.change_product %}
+                                    <a href="{% url 'PURCHASE:product_update' product.id %}" class="text-muted"><i class="mdi mdi-square-edit-outline ml-2"></i></a> 
+                                    {% endif %}
+                                        
+                                </h3>
+                                <p class="mb-1">Added Date: {{ product.created_at|date:"d/m/Y" }} </p>
+
+                                <!-- Product stock -->
+                                <div class="mt-3">
+                                    
+                                    {% if product.total_remaining_amount > 0 %}
+                                    <h4><span class="badge badge-success">Instock</span></h4>
+                                    {% else %}
+                                    <h4><span class="badge badge-danger">Out of stock</span></h4>
+                                    {% endif %}
+                                        
+                                </div>
+
+                                <!-- Product description -->
+                                <div class="mt-4">
+                                    <h6 class="font-14">Suggested Sales Price:</h6>
+                                    <h3> {{ product.suggested_sales_price|floatformat:"2"|intcomma }} ฿</h3>
+                                </div>
+                    
+                                <!-- Product description -->
+                                <div class="mt-4">
+                                    <h6 class="font-14">Description:</h6>
+                                    <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. </p>
+                                </div>
+
+                                <!-- Product information -->
+                                <div class="mt-4">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <h6 class="font-14">Available Stock:</h6>
+                                            <p class="text-sm lh-150"> {{ product.total_remaining_amount|floatformat:"2"|intcomma }} {{ product.weighing_unit }} </p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6 class="font-14">Number of Orders:</h6>
+                                            <p class="text-sm lh-150"> 0 </p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6 class="font-14">Amount:</h6>
+                                            <p class="text-sm lh-150">$8,57,014</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div> <!-- end col -->
+                    </div> <!-- end row-->
+
+                    <div class="table-responsive mt-4">
+                        <table class="table table-bordered table-centered mb-0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Lot Number</th>
+                                    <th>MFG</th>
+                                    <th>EXP</th>
+                                    <th>Shelf Life</th>
+                                    <th>Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                {% if product_lot_numbers %}
+                                    
+                                    {% for product_lot_number in product_lot_numbers %}
+                                    <tr>
+                                        <td> {{ product_lot_number.id }} </td>
+                                        <td> {{ product_lot_number.manufactured_date|date:"d/m/Y" }} </td>
+                                        <td> {{ product_lot_number.expired_date|date:"d/m/Y" }} </td>
+                                        <td>
+                                            <div class="progress-w-percent mb-0">
+                                                <span class="progress-value"> {% get_remaining_shelf_life_day product_lot_number.id %} </span>
+                                                <div class="progress progress-sm">
+                                                    <div class="progress-bar bg-success" role="progressbar" style="width: {% get_remaining_shelf_life_percent product_lot_number.id %}%;" aria-valuenow="{% get_remaining_shelf_life_percent product_lot_number.id %}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>1 pcs.</td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                <tr>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>
+                                        <div class="progress-w-percent mb-0">
+                                            <span class="progress-value"> - </span>
+                                            <div class="progress progress-sm">
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>-</td>
+                                </tr>
+                                {% endif %}
+                                    
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% else %}
+<div class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Permission Denied</a></li>
+                        <li class="breadcrumb-item active">Product</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Product Details</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="text-center">
+                <h3 class="">Permission Denied !</h3>
+                <p class="text-muted mt-3">Sorry, you don't have permission to view product data.</p>
+                <a class="btn btn-primary btn-sm mt-2" href="/"><i class="mdi mdi-home mr-1"></i>Back To Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}
+
+
+{% block script %}
+
+{% endblock script %}

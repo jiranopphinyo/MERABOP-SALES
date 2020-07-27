@@ -1,0 +1,325 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title> {% block title %} {{ company.brand_name }} | Home {% endblock title %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+        <meta content="Coderthemes" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="{% static 'assets/images/favicon.ico' %}">
+
+        <!-- third party css -->
+        <link href="{% static 'assets/css/vendor/jquery-jvectormap-1.2.2.css' %}" rel="stylesheet" type="text/css" />
+        <!-- third party css end -->
+
+        <!-- App css -->
+        <link href="{% static 'assets/css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'assets/css/app-modern.min.css' %}" rel="stylesheet" type="text/css" id="light-style" />
+        <link href="{% static 'assets/css/app-modern-dark.min.css' %}" rel="stylesheet" type="text/css" id="dark-style" />
+
+        
+        {% block css %}
+            
+        {% endblock css %}
+            
+        
+    </head>
+
+    <body class="loading" data-layout="detached" data-layout-config='{"leftSidebarCondensed":false,"darkMode":false, "showRightSidebarOnStart": false}'>
+
+        <!-- Topbar Start -->
+        <div class="navbar-custom topnav-navbar topnav-navbar-dark">
+            <div class="container-fluid">
+
+                <!-- LOGO -->
+                <a href="/" class="topnav-logo">
+                    <span class="topnav-logo-lg">
+                        <img src="{% static 'assets/images/logo-light.png' %}" alt="" height="16">
+                    </span>
+                    <span class="topnav-logo-sm">
+                        <img src="{% static 'assets/images/logo_sm.png' %}" alt="" height="16">
+                    </span>
+                </a>
+
+                <ul class="list-unstyled topbar-right-menu float-right mb-0">
+
+                    <li class="dropdown notification-list d-lg-none">
+                        <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                            <i class="dripicons-search noti-icon"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-animated dropdown-lg p-0">
+                            <form class="p-3">
+                                <input type="text" class="form-control" placeholder="Search ..." aria-label="Recipient's username">
+                            </form>
+                        </div>
+                    </li>
+    
+                    <li class="dropdown notification-list">
+                        <a class="nav-link dropdown-toggle nav-user arrow-none mr-0" data-toggle="dropdown" id="topbar-userdrop" href="#" role="button" aria-haspopup="true"
+                            aria-expanded="false">
+                            <span class="account-user-avatar"> 
+                                <img src="{% static 'assets/images/users/avatar-1.jpg' %}" alt="user-image" class="rounded-circle">
+                            </span>
+                            <span>
+                                <span class="account-user-name"> {% if request.user.first_name %} {{ request.user.get_full_name }} {% else %} {{ request.user.get_username }} {% endif %} </span>
+                                <span class="account-position"> {% if request.user.groups.all %} {{ request.user.groups.all.0 }} {% else %} GUEST {% endif %} </span>
+                            </span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-animated topbar-dropdown-menu profile-dropdown" aria-labelledby="topbar-userdrop">
+                            <!-- item-->
+                            <div class=" dropdown-header noti-title">
+                                <h6 class="text-overflow m-0">Welcome !</h6>
+                            </div>
+    
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                <i class="mdi mdi-account-circle mr-1"></i>
+                                <span>My Account</span>
+                            </a>
+    
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                <i class="mdi mdi-account-edit mr-1"></i>
+                                <span>Settings</span>
+                            </a>
+    
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                <i class="mdi mdi-lifebuoy mr-1"></i>
+                                <span>Support</span>
+                            </a>
+    
+                            <!-- item-->
+                            <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                <i class="mdi mdi-lock-outline mr-1"></i>
+                                <span>Lock Screen</span>
+                            </a>
+    
+                            <!-- item-->
+                            <a href="{% url 'SETTINGS:logout' %}" class="dropdown-item notify-item">
+                                <i class="mdi mdi-logout mr-1"></i>
+                                <span>Logout</span>
+                            </a>
+    
+                        </div>
+                    </li>
+
+                </ul>
+                <a class="button-menu-mobile disable-btn">
+                    <div class="lines">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </a>
+                <div class="app-search dropdown">
+                    <form>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search..." id="top-search">
+                            <span class="mdi mdi-magnify search-icon"></span>
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- end Topbar -->
+        
+        <!-- Start Content-->
+        <div class="container-fluid">
+
+            <!-- Begin page -->
+            <div class="wrapper">
+
+                <!-- ========== Left Sidebar Start ========== -->
+                <div class="left-side-menu left-side-menu-detached">
+
+                    <div class="leftbar-user">
+                        <a href="javascript: void(0);">
+                            <img src="{% static 'assets/images/users/avatar-1.jpg' %}" alt="user-image" height="42" class="rounded-circle shadow-sm">
+                            <span class="leftbar-user-name"> {% if request.user.first_name %} {{ request.user.get_full_name }} {% else %} {{ request.user.get_username }} {% endif %} </span>
+                        </a>
+                    </div>
+
+                    <!--- Sidemenu -->
+                    <ul class="metismenu side-nav">
+
+                        <li class="side-nav-title side-nav-item">Navigation</li>
+
+                        <li class="side-nav-item">
+                            <a href="javascript: void(0);" class="side-nav-link">
+                                <i class="uil-home-alt"></i>
+                                <span> Dashboards </span>
+                            </a>
+                            <ul class="side-nav-second-level" aria-expanded="false">
+                                <li>
+                                    <a href="/">Main Dashboard</a>
+                                </li>
+                            </ul>
+                        </li>
+                        
+                        <li class="side-nav-title side-nav-item">PURCHASE</li>
+                            
+                            {% if perms.PURCHASE.view_supplier %}
+                            <li class="side-nav-item">
+                                <a href="{% url 'PURCHASE:supplier_list' %}" class="side-nav-link">
+                                    <i class="uil-users-alt"></i>
+                                    <span> Suppliers </span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.PURCHASE.view_product %}
+                            <li class="side-nav-item">
+                                <a href="{% url 'PURCHASE:product_list' %}" class="side-nav-link">
+                                    <i class="uil-box"></i>
+                                    <span> Products </span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.PURCHASE.view_purchaseorder %}
+                            <li class="side-nav-item">
+                                <a href="{% url 'PURCHASE:purchase_order_list' %}" class="side-nav-link">
+                                    <i class="uil-file-edit-alt"></i>
+                                    <span> Purchase Order </span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            <li class="side-nav-item">
+                                <a href="#" class="side-nav-link">
+                                    <i class="uil-truck"></i>
+                                    <span> Follow-up Shipment </span>
+                                </a>
+                            </li>
+                                
+                        <li class="side-nav-title side-nav-item">SALES & MARKETING</li>
+                            {% if perms.SALES.view_customer %}
+                            <li class="side-nav-item">
+                                <a href="{% url 'SALES:customer_list' %}" class="side-nav-link">
+                                    <i class="uil-user-square"></i>
+                                    <span> Customers </span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SALES.view_personincharge %}
+                            <li class="side-nav-item">
+                                <a href="{% url 'SALES:person_in_charge_list' %}" class="side-nav-link">
+                                    <i class="uil-user-check"></i>
+                                    <span> Person In Charge </span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SALES.view_purchaserequisition %}
+                            <li class="side-nav-item">
+                                <a href="{% url 'SALES:purchase_requisition_list' %}" class="side-nav-link">
+                                    <i class="uil-file-redo-alt"></i>
+                                    <span> Purchase Requisition </span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SALES.view_quotation %}
+                            <li class="side-nav-item">
+                                <a href="{% url 'SALES:quotation_list' %}" class="side-nav-link">
+                                    <i class="uil-file-bookmark-alt"></i>
+                                    <span> Quotation </span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SALES.view_salesorder %}
+                            <li class="side-nav-item">
+                                <a href="{% url 'SALES:sales_order_list' %}" class="side-nav-link">
+                                    <i class="uil-bill"></i>
+                                    <span> Sales Order </span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SALES.view_dailyreport %}
+                            <li class="side-nav-item">
+                                <a href="{% url 'SALES:daily_report_list' %}" class="side-nav-link">
+                                    <i class="uil-presentation-line"></i>
+                                    <span> Daily Report </span>
+                                </a>
+                            </li>
+                            {% endif %}
+
+                        <li class="side-nav-title side-nav-item">STOCK & WAREHOUSE</li>
+                            
+                            {% if perms.WAREHOUSE.view_productlotnumber %}
+                            <li class="side-nav-item">
+                                <a href="{% url 'WAREHOUSE:product_lot_number_list' %}" class="side-nav-link">
+                                    <i class="uil-parcel"></i>
+                                    <span> Lot Number </span>
+                                </a>
+                            </li>
+                            {% endif %}
+
+                        <li class="side-nav-title side-nav-item">HUMAN RESOURCE</li>
+                            {% if perms.HUMANRESOURCE.view_employee %}
+                            <li class="side-nav-item">
+                                <a href="{% url 'HUMANRESOURCE:employee_list' %}" class="side-nav-link">
+                                    <i class="uil-sitemap"></i>
+                                    <span> Employee </span>
+                                </a>
+                            </li>
+                            {% endif %}
+                                
+                        {% if request.user.is_superuser %}
+                        <li class="side-nav-title side-nav-item">SETTINGS</li>
+                            <li class="side-nav-item">
+                                <a href="{% url 'SETTINGS:settings' %}" class="side-nav-link">
+                                    <i class="uil-cog"></i>
+                                    <span> Settings </span>
+                                </a>
+                            </li>
+                        {% endif %}
+                            
+                    </ul>
+                    <!-- End Sidebar -->
+
+                    <div class="clearfix"></div>
+                    <!-- Sidebar -left -->
+
+                </div>
+                <!-- Left Sidebar End -->
+
+                <div class="content-page">
+                    
+                    
+                    {% block content %}
+                        
+                    {% endblock content %}
+                        
+
+                    {% include 'MAIN/footer.html' %}
+
+                </div> <!-- content-page -->
+
+            </div> <!-- end wrapper-->
+        </div>
+        <!-- END Container -->
+
+
+
+        <!-- bundle -->
+        <script src="{% static 'assets/js/vendor.min.js' %}"></script>
+        <script src="{% static 'assets/js/app.min.js' %}"></script>
+
+        <!-- third party js -->
+        <script src="{% static 'assets/js/vendor/apexcharts.min.js' %}"></script>
+        <script src="{% static 'assets/js/vendor/jquery-jvectormap-1.2.2.min.js' %}"></script>
+        <script src="{% static 'assets/js/vendor/jquery-jvectormap-world-mill-en.js' %}"></script>
+        <!-- third party js ends -->
+
+        <!-- demo app -->
+        <script src="{% static 'assets/js/pages/demo.dashboard.js' %}"></script>
+        <!-- end demo js-->
+        
+        {% block script %}
+            
+        {% endblock script %}
+            
+    </body>
+</html>

@@ -1,0 +1,156 @@
+{% extends 'MAIN/main.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %} {{ company.brand_name }} | Edit Purchase Order {% endblock title %}
+
+
+{% block css %}
+    
+{% endblock css %}
+    
+
+{% block brand %} {{ company.brand_name }} {% endblock brand %}
+    
+
+{% block content %}
+{% if perms.PURCHASE.change_purchaseorder %}
+<div class="content">
+                        
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'PURCHASE:purchase_order_list' %}">Purchase Order</a></li>
+                        <li class="breadcrumb-item active">Edit</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Edit Purchase Order</h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <h4 class="mb-2">Supplier Infomation</h4>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>{{ form.supplier.label }} {% if form.supplier.field.required %} <span class="text-danger">*</span> {% endif %} </label>
+                                            {{ form.supplier }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>{{ form.supplier_billing_address.label }} {% if form.supplier_billing_address.field.required %} <span class="text-danger">*</span> {% endif %} </label>
+                                            {{ form.supplier_billing_address }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>{{ form.supplier_contact_person.label }} {% if form.supplier_contact_person.field.required %} <span class="text-danger">*</span> {% endif %} </label>
+                                            {{ form.supplier_contact_person }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>{{ form.supplier_payment_term.label }} {% if form.supplier_payment_term.field.required %} <span class="text-danger">*</span> {% endif %} </label>
+                                            {{ form.supplier_payment_term }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <h4 class="mb-2">Purchase Order Infomation</h4>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>{{ form.date.label }} {% if form.date.field.required %} <span class="text-danger">*</span> {% endif %} </label>
+                                            {{ form.date }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-xl-12">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>{{ form.remark.label }} {% if form.remark.field.required %} <span class="text-danger">*</span> {% endif %} </label>
+                                            {{ form.remark }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-6">
+                                <a href="{% url 'PURCHASE:purchase_order_detail' purchase_order.id %}" class="btn text-muted d-none d-sm-inline-block btn-link font-weight-semibold">
+                                    <i class="mdi mdi-arrow-left"></i> Back to Purchase Order Details 
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="text-sm-right">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="mdi mdi-twitter-retweet mr-1"></i>Update
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% else %}
+<div class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Permission Denied</a></li>
+                        <li class="breadcrumb-item active">Purchase Order</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Edit Purchase Order</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="text-center">
+                <h3 class="">Permission Denied !</h3>
+                <p class="text-muted mt-3">Sorry, you don't have permission to edit purchase order data.</p>
+                <a class="btn btn-primary btn-sm mt-2" href="/"><i class="mdi mdi-home mr-1"></i>Back To Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}
+    
+
+{% block script %}
+
+{% endblock script %}

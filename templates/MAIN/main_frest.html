@@ -1,0 +1,213 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+
+<head>
+    {% include 'MAIN/meta.html' %}
+        
+    <title> {% block title %} MERABOP | Home {% endblock title %}</title>
+    <link rel="apple-touch-icon" href="{% static 'app-assets/images/ico/apple-icon-120.png' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'app-assets/images/ico/favicon.ico' %}">
+    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,600%7CIBM+Plex+Sans:300,400,500,600,700" rel="stylesheet">
+
+    <!-- BEGIN: Vendor CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'app-assets/vendors/css/vendors.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'app-assets/vendors/css/charts/apexcharts.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'app-assets/vendors/css/extensions/dragula.min.css' %}">
+
+    <!-- BEGIN: Theme CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'app-assets/css/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'app-assets/css/bootstrap-extended.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'app-assets/css/colors.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'app-assets/css/components.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'app-assets/css/themes/dark-layout.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'app-assets/css/themes/semi-dark-layout.css' %}">
+
+    <!-- BEGIN: Page CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'app-assets/css/core/menu/menu-types/vertical-menu.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'app-assets/css/pages/dashboard-analytics.css' %}">
+
+    <!-- BEGIN: Custom CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/style.css' %}">
+
+    {% block css %}
+        
+    {% endblock css %}
+        
+</head>
+
+<!-- BEGIN: Body-->
+
+<body class="vertical-layout vertical-menu-modern boxicon-layout no-card-shadow 2-columns  navbar-sticky footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="2-columns">
+
+    <!-- BEGIN: Header-->
+    <div class="header-navbar-shadow"></div>
+    <nav class="header-navbar main-header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top ">
+        <div class="navbar-wrapper">
+            <div class="navbar-container content">
+                <div class="navbar-collapse" id="navbar-mobile">
+                    <div class="mr-auto float-left bookmark-wrapper d-flex align-items-center">
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item mobile-menu d-xl-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ficon bx bx-menu"></i></a></li>
+                        </ul>
+                        <ul class="nav navbar-nav bookmark-icons">
+                            <li class="nav-item d-none d-lg-block"><a class="nav-link" href="#" data-toggle="tooltip" data-placement="top" title="Email"><i class="ficon bx bx-envelope"></i></a></li>
+                            <li class="nav-item d-none d-lg-block"><a class="nav-link" href="#" data-toggle="tooltip" data-placement="top" title="Chat"><i class="ficon bx bx-chat"></i></a></li>
+                            <li class="nav-item d-none d-lg-block"><a class="nav-link" href="#" data-toggle="tooltip" data-placement="top" title="Todo"><i class="ficon bx bx-check-circle"></i></a></li>
+                            <li class="nav-item d-none d-lg-block"><a class="nav-link" href="#" data-toggle="tooltip" data-placement="top" title="Calendar"><i class="ficon bx bx-calendar-alt"></i></a></li>
+                        </ul>
+                    </div>
+                    <ul class="nav navbar-nav float-right">
+                        <li class="nav-item d-none d-lg-block"><a class="nav-link nav-link-expand"><i class="ficon bx bx-fullscreen"></i></a></li>
+                        <li class="nav-item nav-search"><a class="nav-link nav-link-search"><i class="ficon bx bx-search"></i></a>
+                            <div class="search-input">
+                                <div class="search-input-icon"><i class="bx bx-search primary"></i></div>
+                                <input class="input" type="text" placeholder="Explore SALESMAX..." tabindex="-1" data-search="template-search">
+                                <div class="search-input-close"><i class="bx bx-x"></i></div>
+                                <ul class="search-list"></ul>
+                            </div>
+                        </li>
+                        <li class="dropdown dropdown-user nav-item">
+                            <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
+                                <div class="user-nav d-sm-flex d-none">
+                                    <span class="user-name"> {% if request.user.first_name %} {{ request.user.get_full_name }} {% else %} {{ request.user.get_username }} {% endif %} </span>
+                                    <span class="user-status text-muted"> {% if request.user.groups.all %} {{ request.user.groups.all.0 }} {% else %} GUEST {% endif %} </span>
+                                </div>
+                                <div class="avatar bg-secondary">
+                                    <span class="avatar-content">{% if request.user.first_name %} {{ request.user.first_name.0|upper }}{{ request.user.last_name.0|upper }} {% else %} {{ request.user.get_username.0|upper }} {% endif %} </span>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right pb-0">
+                                <a class="dropdown-item" href="#"><i class="bx bx-user mr-50"></i> Edit Profile</a>
+                                <div class="dropdown-divider mb-0"></div>
+                                <a class="dropdown-item" href="{% url 'SETTINGS:logout' %}"><i class="bx bx-power-off mr-50"></i> Sign Out</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- END: Header-->
+
+
+    <!-- BEGIN: Main Menu-->
+    <div class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
+        <div class="navbar-header">
+            <ul class="nav navbar-nav flex-row">
+                <li class="nav-item mr-auto"><a class="navbar-brand" href="/">
+                        <h2 class="brand-text mb-0"> {% block brand %} MERABOP {% endblock brand %} </h2>
+                    </a></li>
+                <li class="nav-item nav-toggle">
+                    <a class="nav-link modern-nav-toggle pr-0" data-toggle="collapse">
+                        <i class="bx bx-x d-block d-xl-none font-medium-4 primary toggle-icon"></i>
+                        <i class="toggle-icon bx bx-disc font-medium-4 d-none d-xl-block collapse-toggle-icon primary" data-ticon="bx-disc"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="shadow-bottom"></div>
+        <div class="main-menu-content">
+            <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation" data-icon-style="">
+                <li class=" nav-item"><a href="/"><i class="bx bx-home-alt"></i><span class="menu-title" data-i18n="Dashboard">Dashboard</span></a>
+                    <ul class="menu-content">
+                        <li class="active"><a href="/"><i class="bx bx-right-arrow-alt"></i><span class="menu-item" data-i18n="Dashboard">Dashboard</span></a></li>
+                    </ul>
+                </li>
+                <!-- BEGIN: PURCHASE -->
+                <li class=" navigation-header"><span>PURCHASE</span></li>
+                    
+                    {% if perms.PURCHASE.view_supplier %}
+                    <!-- BEGIN: SUPPLIERS -->
+                    <li class=" nav-item"><a href="{% url 'PURCHASE:supplier_list' %}"><i class="bx bx-group"></i><span class="menu-title" data-i18n="Suppliers">Suppliers</span></a></li>
+                    {% endif %}
+                    {% if perms.PURCHASE.view_product %}
+                    <!-- BEGIN: PRODUCTS -->
+                    <li class=" nav-item"><a href="{% url 'PURCHASE:product_list' %}"><i class="bx bx-package"></i><span class="menu-title" data-i18n="Products">Products</span></a></li>
+                    {% endif %}
+                    <!-- BEGIN: PURCHASE ORDER -->
+                    <li class=" nav-item"><a href="#"><i class="bx bx-file"></i><span class="menu-title" data-i18n="Purchase Order">Purchase Order</span></a></li>
+                    <!-- BEGIN: FOLLOW-UP SHIPMENT -->
+                    <li class=" nav-item"><a href="#"><i class="bx bx-truck"></i><span class="menu-title" data-i18n="Follow-up Shipment">Follow-up Shipment</span></a></li>
+                <!-- END: PURCHASE -->
+
+                <!-- BEGIN: SALES & MARKETING -->
+                <li class=" navigation-header"><span>SALES & MARKETING</span></li>
+                    {% if perms.SALES.view_customer %}
+                    <!-- BEGIN: CUSTOMERS -->
+                    <li class=" nav-item"><a href="{% url 'SALES:customer_list' %}"><i class="bx bx-group"></i><span class="menu-title" data-i18n="Customers">Customers</span></a></li>
+                    {% endif %}
+                    {% if perms.SALES.view_personincharge %}
+                    <!-- BEGIN: PERSON IN CHARGE -->
+                    <li class=" nav-item"><a href="{% url 'SALES:person_in_charge_list' %}"><i class="bx bx-user-check"></i><span class="menu-title" data-i18n="Person In Charge">Person In Charge</span></a></li>
+                    {% endif %}
+                    {% if perms.SALES.view_purchaserequisition %}
+                    <!-- BEGIN: PURCHASE REQUISITION -->
+                    <li class=" nav-item"><a href="{% url 'SALES:purchase_requisition_list' %}"><i class="bx bx-file"></i><span class="menu-title" data-i18n="Purchase Requisition">Purchase Requisition</span></a></li>
+                    {% endif %}
+                    {% if perms.SALES.view_quotation %}
+                    <!-- BEGIN: QUOTATION -->
+                    <li class=" nav-item"><a href="{% url 'SALES:quotation_list' %}"><i class="bx bx-file"></i><span class="menu-title" data-i18n="Quotation">Quotation</span></a></li>
+                    {% endif %}
+                    <!-- BEGIN: SALES ORDER -->
+                    <li class=" nav-item"><a href="#"><i class="bx bx-file"></i><span class="menu-title" data-i18n="Sales Order">Sales Order</span></a></li>
+                    <!-- BEGIN: DAILY REPORT -->
+                    <li class=" nav-item"><a href="#"><i class="bx bx-chart"></i><span class="menu-title" data-i18n="Daily Report">Daily Report</span></a></li>
+                <!-- END: SALES & MARKETING -->
+
+                <!-- BEGIN: STOCK & WAREHOUSE -->
+                <li class=" navigation-header"><span>STOCK & WAREHOUSE</span></li>
+                    <!-- BEGIN: LOT NUMBER -->
+                    <li class=" nav-item"><a href="#"><i class="bx bx-home"></i><span class="menu-title" data-i18n="Lot Number">Lot Number</span></a></li>
+                <!-- END: STOCK & WAREHOUSE -->
+
+                <!-- BEGIN: HUMAN RESOURCE -->
+                <li class=" navigation-header"><span>HUMAN RESOURCE</span></li>
+                    <!-- BEGIN: EMPLOYEE -->
+                    <li class=" nav-item"><a href="#"><i class="bx bx-sitemap"></i><span class="menu-title" data-i18n="Employees">Employees</span></a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- END: Main Menu-->
+
+    {% block content %}
+        
+    {% endblock content %}
+
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+
+    {% include 'MAIN/footer.html' %}
+
+    <!-- BEGIN: Vendor JS-->
+    <script src="{% static 'app-assets/vendors/js/vendors.min.js' %}"></script>
+    <script src="{% static 'app-assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.js' %}"></script>
+    <script src="{% static 'app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.js' %}"></script>
+    <script src="{% static 'app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js' %}"></script>
+    <!-- BEGIN Vendor JS-->
+
+    <!-- BEGIN: Page Vendor JS-->
+    <script src="{% static 'app-assets/vendors/js/charts/apexcharts.min.js' %}"></script>
+    <script src="{% static 'app-assets/vendors/js/extensions/dragula.min.js' %}"></script>
+    <!-- END: Page Vendor JS-->
+
+    <!-- BEGIN: Theme JS-->
+    <script src="{% static 'app-assets/js/core/app-menu.js' %}"></script>
+    <script src="{% static 'app-assets/js/core/app.js' %}"></script>
+    <script src="{% static 'app-assets/js/scripts/components.js' %}"></script>
+    <script src="{% static 'app-assets/js/scripts/footer.js' %}"></script>
+    <!-- END: Theme JS-->
+
+    <!-- BEGIN: Page JS-->
+    <script src="{% static 'app-assets/js/scripts/pages/dashboard-analytics.js' %}"></script>
+    <!-- END: Page JS-->
+    
+    {% block script %}
+        
+    {% endblock script %}
+        
+</body>
+<!-- END: Body-->
+
+</html>

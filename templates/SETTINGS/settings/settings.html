@@ -1,0 +1,798 @@
+{% extends 'MAIN/main.html' %}
+{% load static %}
+
+
+{% block title %} {{ company.brand_name }} | Settings {% endblock title %}
+    
+
+{% block css %}
+
+{% endblock css %}
+
+
+{% block brand %} {{ company.brand_name }} {% endblock brand %}
+    
+
+{% block content %}
+{% if request.user.is_superuser %}
+<div class="content">
+
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active"><a href="{% url 'SETTINGS:settings' %}">Settings</a></li>
+                    </ol>
+                </div>
+                <h4 class="page-title"> Settings </h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+
+    <div class="row">
+        <div class="col-sm-3 mb-2 mb-sm-0">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active show" id="v-pills-company-tab" data-toggle="pill" href="#v-pills-company" role="tab" aria-controls="v-pills-company"
+                    aria-selected="true">Company
+                </a>
+                <a class="nav-link" id="v-pills-supplier-tab" data-toggle="pill" href="#v-pills-supplier" role="tab" aria-controls="v-pills-supplier"
+                    aria-selected="false">Supplier
+                </a>
+                <a class="nav-link" id="v-pills-product-tab" data-toggle="pill" href="#v-pills-product" role="tab" aria-controls="v-pills-product"
+                    aria-selected="false">Product
+                </a>
+                <a class="nav-link" id="v-pills-purchase-order-tab" data-toggle="pill" href="#v-pills-purchase-order" role="tab" aria-controls="v-pills-purchase-order"
+                    aria-selected="false">Purchase Order
+                </a>
+                <a class="nav-link" id="v-pills-purchase-requisition-tab" data-toggle="pill" href="#v-pills-purchase-requisition" role="tab" aria-controls="v-pills-purchase-requisition"
+                    aria-selected="false">Purchase Requisition
+                </a>
+                <a class="nav-link" id="v-pills-quotation-tab" data-toggle="pill" href="#v-pills-quotation" role="tab" aria-controls="v-pills-quotation"
+                    aria-selected="false">Quotation
+                </a>
+                <a class="nav-link" id="v-pills-sales-order-tab" data-toggle="pill" href="#v-pills-sales-order" role="tab" aria-controls="v-pills-sales-order"
+                    aria-selected="false">Sales Order
+                </a>
+                <a class="nav-link" id="v-pills-daily-report-tab" data-toggle="pill" href="#v-pills-daily-report" role="tab" aria-controls="v-pills-daily-report"
+                    aria-selected="false">Daily Report
+                </a>
+                <a class="nav-link" id="v-pills-employee-tab" data-toggle="pill" href="#v-pills-employee" role="tab" aria-controls="v-pills-employee"
+                    aria-selected="false">Employee
+                </a>
+                <a class="nav-link" id="v-pills-organization-tab" data-toggle="pill" href="#v-pills-organization" role="tab" aria-controls="v-pills-organization"
+                    aria-selected="false">Organization
+                </a>
+            </div>
+        </div>
+    
+        <div class="col-sm-9">
+            <div class="tab-content" id="v-pills-tabContent">
+                <div class="tab-pane fade active show" id="v-pills-company" role="tabpanel" aria-labelledby="v-pills-company-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="dropdown float-right">
+                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="mdi mdi-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <!-- item-->
+                                    <a href="{% url 'SETTINGS:settings_company_create' %}" class="dropdown-item">Add</a>
+                                    <!-- item-->
+                                    <a href="{% url 'SETTINGS:settings_company_update' company.id %}" class="dropdown-item">Edit</a>
+    
+                                </div>
+                            </div>
+                            <h4 class="header-title mb-3">Company Information</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-centered mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>Info</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for field in company_form %}
+                                        <tr>
+                                            <td> {{ field.label }} :</td>
+                                            <td> {{ field.value }} </td>
+                                        </tr>
+                                        {% endfor %}
+                                            
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-supplier" role="tabpanel" aria-labelledby="v-pills-supplier-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="dropdown float-right">
+                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="mdi mdi-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <!-- item-->
+                                    <a href="{% url 'SETTINGS:settings_supplier_type_create' %}" class="dropdown-item">Add</a>
+    
+                                </div>
+                            </div>
+                            <h4 class="header-title mb-3">Supplier Type Information</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-centered mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Type</th>
+                                            <th class="text-center" style="width: 125px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for type in supplier_types %}
+                                        <tr>
+                                            <td> {{ type.supplier_type }} </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'SETTINGS:settings_supplier_type_update' type.id %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                            
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-product" role="tabpanel" aria-labelledby="v-pills-product-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="dropdown float-right">
+                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="mdi mdi-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <!-- item-->
+                                    <a href="{% url 'SETTINGS:settings_packing_type_create' %}" class="dropdown-item">Add</a>
+    
+                                </div>
+                            </div>
+                            <h4 class="header-title mb-3">Packing Type Information</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-centered mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Type</th>
+                                            <th class="text-center" style="width: 125px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for type in packing_types %}
+                                        <tr>
+                                            <td> {{ type.packing_type }} </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'SETTINGS:settings_packing_type_update' type.id %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                            
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="dropdown float-right">
+                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="mdi mdi-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <!-- item-->
+                                    <a href="{% url 'SETTINGS:settings_packing_material_create' %}" class="dropdown-item">Add</a>
+    
+                                </div>
+                            </div>
+                            <h4 class="header-title mb-3">Packing Material Information</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-centered mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Material</th>
+                                            <th class="text-center" style="width: 125px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for material in packing_materials %}
+                                        <tr>
+                                            <td> {{ material.packing_material }} </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'SETTINGS:settings_packing_material_update' material.id %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                            
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-purchase-order" role="tabpanel" aria-labelledby="v-pills-purchase-order-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="dropdown float-right">
+                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="mdi mdi-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <!-- item-->
+                                    <a href="{% url 'SETTINGS:settings_purchase_order_status_create' %}" class="dropdown-item">Add</a>
+    
+                                </div>
+                            </div>
+                            <h4 class="header-title mb-3">Purchase Order Status Information</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-centered mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Status</th>
+                                            <th class="text-center" style="width: 125px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for status in purchase_order_statuses %}
+                                        <tr>
+                                            <td> {{ status.purchase_order_status }} </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'SETTINGS:settings_purchase_order_status_update' status.id %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                            
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-purchase-requisition" role="tabpanel" aria-labelledby="v-pills-purchase-requisition-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="dropdown float-right">
+                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="mdi mdi-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <!-- item-->
+                                    <a href="{% url 'SETTINGS:settings_purchase_requisition_status_create' %}" class="dropdown-item">Add</a>
+    
+                                </div>
+                            </div>
+                            <h4 class="header-title mb-3">Purchase Requisition Status Information</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-centered mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Type</th>
+                                            <th class="text-center" style="width: 125px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for status in purchase_requisition_statuses %}
+                                        <tr>
+                                            <td> {{ status.purchase_requisition_status }} </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'SETTINGS:settings_purchase_requisition_status_update' status.id %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                            
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-quotation" role="tabpanel" aria-labelledby="v-pills-quotation-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="dropdown float-right">
+                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="mdi mdi-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <!-- item-->
+                                    <a href="{% url 'SETTINGS:settings_quotation_status_create' %}" class="dropdown-item">Add</a>
+    
+                                </div>
+                            </div>
+                            <h4 class="header-title mb-3">Quotation Status Information</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-centered mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Type</th>
+                                            <th class="text-center" style="width: 125px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for status in quotation_statuses %}
+                                        <tr>
+                                            <td> {{ status.quotation_status }} </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'SETTINGS:settings_quotation_status_update' status.id %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                            
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-sales-order" role="tabpanel" aria-labelledby="v-pills-sales-order-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="dropdown float-right">
+                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="mdi mdi-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <!-- item-->
+                                    <a href="{% url 'SETTINGS:settings_sales_order_status_create' %}" class="dropdown-item">Add</a>
+    
+                                </div>
+                            </div>
+                            <h4 class="header-title mb-3">Sales Order Status Information</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-centered mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Type</th>
+                                            <th class="text-center" style="width: 125px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for status in sales_order_statuses %}
+                                        <tr>
+                                            <td> {{ status.sales_order_status }} </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'SETTINGS:settings_sales_order_status_update' status.id %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                            
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-daily-report" role="tabpanel" aria-labelledby="v-pills-daily-report-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="dropdown float-right">
+                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="mdi mdi-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <!-- item-->
+                                    <a href="{% url 'SETTINGS:settings_daily_report_contact_method_create' %}" class="dropdown-item">Add</a>
+    
+                                </div>
+                            </div>
+                            <h4 class="header-title mb-3">Daily Report Contact Method Information</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-centered mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Type</th>
+                                            <th class="text-center" style="width: 125px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for method in daily_report_contact_methods %}
+                                        <tr>
+                                            <td> {{ method.daily_report_contact_method }} </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'SETTINGS:settings_daily_report_contact_method_update' method.id %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                            
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="dropdown float-right">
+                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="mdi mdi-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <!-- item-->
+                                    <a href="{% url 'SETTINGS:settings_daily_report_type_create' %}" class="dropdown-item">Add</a>
+    
+                                </div>
+                            </div>
+                            <h4 class="header-title mb-3">Daily Report Type Information</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-centered mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Type</th>
+                                            <th class="text-center" style="width: 125px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for type in daily_report_types %}
+                                        <tr>
+                                            <td> {{ type.daily_report_type }} </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'SETTINGS:settings_daily_report_type_update' type.id %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                            
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-employee" role="tabpanel" aria-labelledby="v-pills-employee-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="dropdown float-right">
+                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="mdi mdi-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <!-- item-->
+                                    <a href="{% url 'SETTINGS:settings_living_arrangement_create' %}" class="dropdown-item">Add</a>
+    
+                                </div>
+                            </div>
+                            <h4 class="header-title mb-3">Living Arrangement Information</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-centered mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Type</th>
+                                            <th class="text-center" style="width: 125px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for type in living_arrangements %}
+                                        <tr>
+                                            <td> {{ type.living_arrangement }} </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'SETTINGS:settings_living_arrangement_update' type.id %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                            
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="dropdown float-right">
+                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="mdi mdi-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <!-- item-->
+                                    <a href="{% url 'SETTINGS:settings_race_create' %}" class="dropdown-item">Add</a>
+    
+                                </div>
+                            </div>
+                            <h4 class="header-title mb-3">Race Information</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-centered mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Type</th>
+                                            <th class="text-center" style="width: 125px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for type in races %}
+                                        <tr>
+                                            <td> {{ type.race }} </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'SETTINGS:settings_race_update' type.id %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                            
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="dropdown float-right">
+                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="mdi mdi-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <!-- item-->
+                                    <a href="{% url 'SETTINGS:settings_nationality_create' %}" class="dropdown-item">Add</a>
+    
+                                </div>
+                            </div>
+                            <h4 class="header-title mb-3">Nationality Information</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-centered mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Type</th>
+                                            <th class="text-center" style="width: 125px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for type in nationalities %}
+                                        <tr>
+                                            <td> {{ type.nationality }} </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'SETTINGS:settings_nationality_update' type.id %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                            
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-organization" role="tabpanel" aria-labelledby="v-pills-organization-tab">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="dropdown float-right">
+                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="mdi mdi-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <!-- item-->
+                                    <a href="{% url 'SETTINGS:settings_division_create' %}" class="dropdown-item">Add</a>
+    
+                                </div>
+                            </div>
+                            <h4 class="header-title mb-3">Division Information</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-centered mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Division</th>
+                                            <th class="text-center" style="width: 125px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for division in divisions %}
+                                        <tr>
+                                            <td> {{ division.division }} </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'SETTINGS:settings_division_update' division.id %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                            
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="dropdown float-right">
+                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="mdi mdi-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <!-- item-->
+                                    <a href="{% url 'SETTINGS:settings_department_create' %}" class="dropdown-item">Add</a>
+    
+                                </div>
+                            </div>
+                            <h4 class="header-title mb-3">Department Information</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-centered mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Department</th>
+                                            <th class="text-center" style="width: 125px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for department in departments %}
+                                        <tr>
+                                            <td> {{ department.department }} </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'SETTINGS:settings_department_update' department.id %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                            
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="dropdown float-right">
+                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="mdi mdi-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <!-- item-->
+                                    <a href="{% url 'SETTINGS:settings_section_create' %}" class="dropdown-item">Add</a>
+    
+                                </div>
+                            </div>
+                            <h4 class="header-title mb-3">Section Information</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-centered mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Section</th>
+                                            <th class="text-center" style="width: 125px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for section in sections %}
+                                        <tr>
+                                            <td> {{ section.section }} </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'SETTINGS:settings_section_update' section.id %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                            
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="dropdown float-right">
+                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="mdi mdi-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <!-- item-->
+                                    <a href="{% url 'SETTINGS:settings_position_create' %}" class="dropdown-item">Add</a>
+    
+                                </div>
+                            </div>
+                            <h4 class="header-title mb-3">Position Information</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover table-centered mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Position</th>
+                                            <th class="text-center" style="width: 125px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for position in positions %}
+                                        <tr>
+                                            <td> {{ position.position }} </td>
+                                            <td class="text-center">
+                                                <a href="{% url 'SETTINGS:settings_position_update' position.id %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                            
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Permission Denied</a></li>
+                        <li class="breadcrumb-item active">Settings</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Settings</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="text-center">
+                <h3 class="">Permission Denied !</h3>
+                <p class="text-muted mt-3">Sorry, you don't have permission to view settings data.</p>
+                <a class="btn btn-primary btn-sm mt-2" href="/"><i class="mdi mdi-home mr-1"></i>Back To Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}
+
+
+{% block script %}
+
+{% endblock script %}

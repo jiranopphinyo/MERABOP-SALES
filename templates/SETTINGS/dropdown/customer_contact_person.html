@@ -1,0 +1,7 @@
+{% if contact_persons %}
+    {% for contact_person in contact_persons %}
+    <option value="{{ contact_person.id }}">{{ contact_person }}</option>
+    {% endfor %}
+{% else %}
+    <option value="">--------------------</option>
+{% endif %}

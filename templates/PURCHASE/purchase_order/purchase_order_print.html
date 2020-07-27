@@ -1,0 +1,200 @@
+{% extends 'MAIN/main.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %} {{ company.brand_name }} | {{ purchase_order.id }} Print {% endblock title %}
+
+
+{% block css %}
+    
+{% endblock css %}
+    
+
+{% block brand %} {{ company.brand_name }} {% endblock brand %}
+    
+
+{% block content %}
+{% if perms.PURCHASE.view_purchaseorder %}
+<div class="content">
+                        
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'PURCHASE:purchase_order_list' %}">Purchase Order</a></li>
+                        <li class="breadcrumb-item active">Print</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Print Purchase Order</h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <!-- Invoice Logo-->
+                    <div class="clearfix">
+                        <div class="float-left mb-3">
+                            <img src="{% static 'assets/images/logo-light.png' %}" alt="" height="18">
+                        </div>
+                        <div class="float-right">
+                            <h4 class="m-0 d-print-none">Purchase Order</h4>
+                        </div>
+                    </div>
+
+                    <!-- Invoice Detail-->
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="float-left mt-3">
+                                <p><b>Hello, {{ purchase_order.supplier_contact_person.fullname }}</b></p>
+                                <p class="text-muted font-13">Please find below a cost-breakdown for the recent work completed. Please make payment at your earliest convenience, and do not hesitate to contact me with any questions.</p>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-4 offset-sm-2">
+                            <div class="mt-3 float-sm-right">
+                                <p class="font-13"><strong>Purchase Order ID: </strong><span class="float-right">#{{ purchase_order.id }} </span></p>
+                                <p class="font-13"><strong>Purchase Order Date: </strong><span class="float-right">&nbsp;&nbsp; {{ purchase_order.date|date:"d/m/Y" }} </span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-sm-4">
+                            <h6>Billing Address</h6>
+                            <address>
+                                {{ purchase_order.supplier.name }} <br>
+                                {{ purchase_order.supplier_billing_address.address_line_1 }} {% if purchase_order.supplier_billing_address.address_line_2 %} {{ purchase_order.supplier_billing_address.address_line_2 }} {% else %}{% endif %} <br>
+                                {{ purchase_order.supplier_billing_address.sub_district }} {{ purchase_order.supplier_billing_address.district }} {{ purchase_order.supplier_billing_address.province }} <br>
+                                {{ purchase_order.supplier_billing_address.postal_code }} {{ purchase_order.supplier_billing_address.country }} <br>
+                                <abbr title="Phone">P:</abbr> {{ purchase_order.supplier_billing_address.phone }}
+                            </address>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <h6>Delivery Address</h6>
+                            <address>
+                                {{ company.company_name }} <br>
+                                {{ company.address_line_1 }} {% if company.address_line_2 %} {{ company.address_line_2 }} {% else %}{% endif %} <br>
+                                {{ company.sub_district }} {{ company.district }} {{ company.province }} <br>
+                                {{ company.postal_code }} {{ company.country }} <br>
+                                <abbr title="Phone">P:</abbr> {{ company.phone }}
+                            </address>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <h6>Payment Term</h6>
+                            <p> {{ purchase_order.supplier_payment_term.payment_term }} {{ purchase_order.supplier_payment_term.credit_day }} Days </p>
+                        </div>
+                    </div>       
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                <table class="table mt-4">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Item</th>
+                                            <th>Quantity</th>
+                                            <th>Unit Price</th>
+                                            <th class="text-right">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        {% for item in purchase_order_items %}
+                                        <tr>
+                                            <td> {{ forloop.counter }} </td>
+                                            <td>
+                                                <b> {{ item.product.name }} </b> <br/>
+                                                {{ item.product.id }}
+                                            </td>
+                                            <td> {{ item.quantity|floatformat:"2"|intcomma }} </td>
+                                            <td> ฿{{ item.unit_price|floatformat:"2"|intcomma }} </td>
+                                            <td class="text-right"> ฿{{ item.amount|floatformat:"2"|intcomma }} </td>
+                                        </tr>
+                                        {% endfor %}
+                                            
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="clearfix pt-3">
+                                <h6 class="text-muted">Notes:</h6>
+                                <small>
+                                    All accounts are to be paid within 7 days from receipt of
+                                    invoice. To be paid by cheque or credit card or direct payment
+                                    online. If account is not paid within 7 days the credits details
+                                    supplied as confirmation of work undertaken will be charged the
+                                    agreed quoted fee noted above.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="float-right mt-3 mt-sm-0">
+                                <p><b>Sub Total:</b> <span class="float-right">&nbsp;&nbsp; ฿{{ purchase_order.sub_total|floatformat:"2"|intcomma }} </span></p>
+                                <p><b>VAT (7%):</b> <span class="float-right"> ฿{{ purchase_order.vat|floatformat:"2"|intcomma }} </span></p>
+                                <h3> ฿{{ purchase_order.net_total|floatformat:"2"|intcomma }} </h3>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+
+                    <div class="d-print-none mt-4">
+                        <div class="text-right">
+                            <a href="javascript:window.print()" class="btn btn-primary"><i class="mdi mdi-printer"></i> Print</a>
+                            <a href="{% url 'PURCHASE:purchase_order_detail' purchase_order.id %}" class="btn btn-outline-secondary">Back</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% else %}
+<div class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Permission Denied</a></li>
+                        <li class="breadcrumb-item active">Purchase Order</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Print Purchase Order</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="text-center">
+                <h3 class="">Permission Denied !</h3>
+                <p class="text-muted mt-3">Sorry, you don't have permission to print purchase order data.</p>
+                <a class="btn btn-primary btn-sm mt-2" href="/"><i class="mdi mdi-home mr-1"></i>Back To Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}
+    
+
+{% block script %}
+
+{% endblock script %}

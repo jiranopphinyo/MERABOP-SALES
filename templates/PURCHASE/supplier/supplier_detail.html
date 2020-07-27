@@ -1,0 +1,437 @@
+{% extends 'MAIN/main.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %} {{ company.brand_name }} | Supplier Detail - {{ supplier.id }} {% endblock title %}
+
+
+{% block css %}
+    
+{% endblock css %}
+    
+
+{% block brand %} {{ company.brand_name }} {% endblock brand %}
+    
+
+{% block content %}
+{% if perms.PURCHASE.view_supplier %}
+<div class="content">
+                        
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'PURCHASE:supplier_list' %}">Supplier</a></li>
+                        <li class="breadcrumb-item active">Details</li>
+                    </ol>
+                </div>
+                <h4 class="page-title"> {{ supplier }} </h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+
+
+    <div class="row">
+        <div class="col-sm-12">
+            <!-- Profile -->
+            <div class="card {% if supplier.supplier_type.id == 1 %} bg-primary {% elif supplier.supplier_type.id == 2 %} bg-warning {% elif supplier.supplier_type.id == 3 %} bg-danger {% elif supplier.supplier_type.id == 4 %} bg-info {% else %} bg-secondary {% endif %}">
+                <div class="card-body profile-user-box">
+
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="media">
+                                <div class="media-body">
+
+                                    <h4 class="mt-1 mb-1 text-white"> {{ supplier.name }} </h4>
+                                    <p class="font-13 text-white-50"> {{ supplier.id }} </p>
+
+                                    <ul class="mb-0 list-inline text-light">
+                                        <li class="list-inline-item mr-3">
+                                            <h5 class="mb-1">$ 25,184</h5>
+                                            <p class="mb-0 font-13 text-white-50">Total Purchased Amount</p>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <h5 class="mb-1">5482</h5>
+                                            <p class="mb-0 font-13 text-white-50">Number of Orders</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% if perms.PURCHASE.change_supplier %}
+                        <div class="col-sm-4">
+                            <div class="text-center mt-sm-0 mt-3 text-sm-right">
+                                <a class="btn btn-light" href="{% url 'PURCHASE:supplier_update' supplier.id %}">
+                                    <i class="mdi mdi-account-edit"></i> Edit Supplier
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+                            
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <!-- Personal-Information -->
+            <div class="card">
+                <div class="card-body">
+                    
+                    {% if perms.PURCHASE.change_supplier %}
+                    <div class="dropdown float-right">
+                        <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                            <i class="mdi mdi-dots-vertical"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <!-- item-->
+                            <a href="{% url 'PURCHASE:supplier_update' supplier.id %}" class="dropdown-item">Edit</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                        
+                    <h4 class="header-title mt-0 mb-3">Supplier Information</h4>
+                    <p class="text-muted font-13"> {{ supplier.description }} </p>
+
+                    <hr/>
+
+                    <div class="text-left">
+                        <p class="text-muted"><strong>Name :</strong> <span class="ml-2"> {{ supplier.name }} </span></p>
+
+                        <p class="text-muted"><strong>Email :</strong> <span class="ml-2"> {{ supplier.email }} </span></p>
+
+                        <p class="text-muted"><strong>Website :</strong> <span class="ml-2"> {{ supplier.website }} </span></p>
+
+                        <p class="text-muted"><strong>Created at :</strong> <span class="ml-2"> {{ supplier.created_at|date:"d M Y" }} </span></p>
+
+                    </div>
+                </div>
+            </div>
+            <!-- Personal-Information -->
+
+            <!-- Address Information -->
+            {% if addresses %}
+                {% for address in addresses %}
+                <div class="card">
+                    <div class="card-body">
+                        
+                        {% if perms.PURCHASE.add_supplieraddress or perms.PURCHASE.change_supplieraddress %}
+                        <div class="dropdown float-right">
+                            <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                <i class="mdi mdi-dots-vertical"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                
+                                {% if perms.PURCHASE.add_supplieraddress %}
+                                <!-- item-->
+                                <a href="{% url 'PURCHASE:supplier_address_create' supplier.id %}" class="dropdown-item">Add</a>
+                                {% endif %}
+                                
+                                {% if perms.PURCHASE.change_supplieraddress %}
+                                <!-- item-->
+                                <a href="{% url 'PURCHASE:supplier_address_update' address.id %}" class="dropdown-item">Edit</a>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                        {% endif %}
+                            
+                        <h4 class="header-title mb-3"> {{ address.address_name }} </h4>
+                        
+                        <address class="mb-0 font-14 address-lg">
+                            {{ address.address_line_1 }} {% if address.address_line_2 %}, {{ address.address_line_2 }}, {% else %} {% endif %} <br>
+                            {{ address.sub_district }}, {{ address.district }}, <br>
+                            {{ address.province }} {{ address.postal_code }} {{ address.country }} <br>
+                            <abbr title="Phone">P:</abbr> {{ address.phone }} <br>
+                            <abbr title="Fax">F:</abbr> {% if address.fax %} {{ address.fax }} {% else %} - {% endif %}
+                        </address>
+
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="card">
+                    <div class="card-body">
+                        
+                        {% if perms.PURCHASE.add_supplieraddress %}
+                        <div class="dropdown float-right">
+                            <a href="{% url 'PURCHASE:supplier_address_create' supplier.id %}" class="arrow-none card-drop" aria-expanded="false">
+                                <i class="mdi mdi-plus"></i>
+                            </a>
+                        </div>
+                        {% endif %}
+                            
+                        <h4 class="header-title mb-3"> Address Information </h4>
+                    </div>
+                </div>
+            {% endif %}
+            <!-- Address Information -->
+
+            <!-- Contact Person Information -->
+            {% if contact_persons %}
+                {% for contact_person in contact_persons %}
+                <div class="card widget-flat {% if contact_person.is_active %} bg-success {% else %} bg-secondary {% endif %} text-white">
+                    <div class="card-body">
+                        
+                        {% if perms.PURCHASE.add_suppliercontactperson or perms.PURCHASE.change_suppliercontactperson %}
+                        <div class="dropdown float-right">
+                            <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                <i class="mdi mdi-dots-vertical"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                
+                                {% if perms.PURCHASE.add_suppliercontactperson %}
+                                <!-- item-->
+                                <a href="{% url 'PURCHASE:supplier_contact_person_create' supplier.id %}" class="dropdown-item">Add</a>
+                                {% endif %}
+                                
+                                {% if perms.PURCHASE.change_suppliercontactperson %}
+                                <!-- item-->
+                                <a href="{% url 'PURCHASE:supplier_contact_person_update' contact_person.id %}" class="dropdown-item">Edit</a>
+                                {% endif %}
+                                    
+                            </div>
+                        </div>
+                        {% endif %}
+                            
+                        <h4 class="header-title mb-3"> {{ contact_person.fullname }} </h4>
+                        
+                        <div class="text-left">
+                            <p><strong>Job Title :</strong> <span class="ml-2"> {{ contact_person.job_title }} </span></p>
+    
+                            <p><strong>Phone :</strong> <span class="ml-2"> {{ contact_person.phone }} </span></p>
+    
+                            <p><strong>Email :</strong> <span class="ml-2"> {{ contact_person.email }} </span></p>
+    
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="card">
+                    <div class="card-body">
+                        
+                        {% if perms.PURCHASE.add_suppliercontactperson %}
+                        <div class="dropdown float-right">
+                            <a href="{% url 'PURCHASE:supplier_contact_person_create' supplier.id %}" class="arrow-none card-drop" aria-expanded="false">
+                                <i class="mdi mdi-plus"></i>
+                            </a>
+                        </div>
+                        {% endif %}
+                        <h4 class="header-title mb-3"> Contact Person Information </h4>
+                    </div>
+                </div>
+            {% endif %}
+            <!-- Contact Person Information -->
+        </div>
+
+        <div class="col-lg-8">
+
+            <!-- Chart-->
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="header-title mb-3">Orders & Revenue</h4>
+                    <div style="height: 260px;" class="chartjs-chart">
+                        <canvas id="high-performing-product"></canvas>
+                    </div>        
+                </div>
+            </div>
+            <!-- End Chart-->
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="card tilebox-one">
+                        <div class="card-body">
+                            <i class="dripicons-basket float-right text-muted"></i>
+                            <h6 class="text-muted text-uppercase mt-0">Orders</h6>
+                            <h2 class="m-b-20">1,587</h2>
+                            <span class="badge badge-primary"> +11% </span> <span class="text-muted">From previous period</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="card tilebox-one">
+                        <div class="card-body">
+                            <i class="dripicons-box float-right text-muted"></i>
+                            <h6 class="text-muted text-uppercase mt-0">Revenue</h6>
+                            <h2 class="m-b-20">$<span>46,782</span></h2>
+                            <span class="badge badge-danger"> -29% </span> <span class="text-muted">From previous period</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="card tilebox-one">
+                        <div class="card-body">
+                            <i class="dripicons-jewel float-right text-muted"></i>
+                            <h6 class="text-muted text-uppercase mt-0">Product Sold</h6>
+                            <h2 class="m-b-20">1,890</h2>
+                            <span class="badge badge-primary"> +89% </span> <span class="text-muted">Last year</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+           
+
+            {% if payment_terms %}
+            <div class="card">
+                <div class="card-body">
+                    
+                    {% if perms.PURCHASE.add_supplierpaymentterm %}
+                    <div class="dropdown float-right">
+                        <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                            <i class="mdi mdi-dots-vertical"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <!-- item-->
+                            <a href="{% url 'PURCHASE:supplier_payment_term_create' supplier.id %}" class="dropdown-item">Add</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                        
+                    <h4 class="header-title mb-3">Payment Term Information</h4>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover table-centered mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Payment Term</th>
+                                    <th>Credit Day</th>
+                                    <th>Credit Amount</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                {% for payment_term in payment_terms %}
+                                <tr>
+                                    <td><span class="badge badge-primary"> {{ payment_term.payment_term }} </span></td>
+                                    <td> {{ payment_term.credit_day }} Days</td>
+                                    <td> {{ payment_term.credit_amount|floatformat:"2"|intcomma }} ฿ </td>
+                                    <td> 
+                                        {% if perms.PURCHASE.change_supplierpaymentterm %}
+                                        <a href="{% url 'PURCHASE:supplier_payment_term_update' payment_term.id %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                        {% endif %}
+                                        {% if perms.PURCHASE.delete_supplierpaymentterm %}
+                                        <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-delete"></i></a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                    
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="card">
+                <div class="card-body">
+                    
+                    {% if perms.PURCHASE.add_supplierpaymentterm %}
+                    <div class="dropdown float-right">
+                        <a href="{% url 'PURCHASE:supplier_payment_term_create' supplier.id %}" class="arrow-none card-drop" aria-expanded="false">
+                            <i class="mdi mdi-plus"></i>
+                        </a>
+                    </div>
+                    {% endif %}
+                        
+                    <h4 class="header-title mb-3"> Payment Term Information </h4>
+                </div>
+            </div>
+            {% endif %}
+                
+            
+            {% if perms.PURCHASE.view_product %}
+                {% if products %}
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="header-title mb-3">Related Products</h4>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-centered mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Price</th>
+                                        <th>Stock</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    {% for product in products %}
+                                    <tr>
+                                        <td>
+                                            {% if perms.PURCHASE.view_product %}
+                                                <a href="{% url 'PURCHASE:product_detail' product.id %}"> {{ product.name }} </a>
+                                            {% else %}
+                                                {{ product.name }}
+                                            {% endif %}
+                                        </td>
+                                        <td> {{ product.suggested_sales_price|floatformat:"2"|intcomma }} ฿</td>
+                                        <td> {{ product.total_remaining_amount|floatformat:"2"|intcomma }} {{ product.weighing_unit }} </td>
+                                    </tr>
+                                    {% endfor %}
+                                        
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endif %}
+                
+
+        </div>
+
+    </div>
+    
+</div>
+{% else %}
+<div class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Permission Denied</a></li>
+                        <li class="breadcrumb-item active">Details</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Supplier Details</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="text-center">
+                <h3 class="">Permission Denied !</h3>
+                <p class="text-muted mt-3">Sorry, you don't have permission to view supplier data.</p>
+                <a class="btn btn-primary btn-sm mt-2" href="/"><i class="mdi mdi-home mr-1"></i>Back To Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}
+    
+
+{% block script %}
+<!-- third party js -->
+<script src="{% static 'assets/js/vendor/Chart.bundle.min.js' %}"></script>
+<!-- third party js ends -->
+
+<!-- demo app -->
+<script src="{% static 'assets/js/pages/demo.profile.js' %}"></script>
+<!-- end demo js-->
+{% endblock script %}

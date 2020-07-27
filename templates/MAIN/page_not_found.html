@@ -1,0 +1,56 @@
+{% extends 'MAIN/main.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %} {{ company.brand_name }} | Page Not Found {% endblock title %}
+
+
+{% block css %}
+    
+{% endblock css %}
+    
+
+{% block brand %} {{ company.brand_name }} {% endblock brand %}
+    
+
+{% block content %}
+<div class="content">
+                        
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Home</a></li>
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Pages</a></li>
+                        <li class="breadcrumb-item active">404</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Page Not Found</h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+
+    <div class="row justify-content-center">
+        <div class="col-lg-4">
+            <div class="text-center">
+                <img src="{% static 'assets/images/file-searching.svg' %}" height="90" alt="File not found Image">
+
+                <h1 class="text-error mt-4">404</h1>
+                <h4 class="text-uppercase text-danger mt-3">Page Not Found</h4>
+                <p class="text-muted mt-3"> {{ message }} </p>
+
+                <a class="btn btn-info mt-3" href="/"><i class="mdi mdi-reply"></i> Return Home</a>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock content %}
+    
+
+{% block script %}
+
+{% endblock script %}

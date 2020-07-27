@@ -1,0 +1,9 @@
+{% if sales_reps %}
+    {% for sales in sales_reps %}
+    <option value="{{ sales.sales_reps.id }}"> {{ sales }} </option>
+    {% endfor %}
+{% else %}
+<option value="">--------------------</option>
+{% endif %}
+    
+

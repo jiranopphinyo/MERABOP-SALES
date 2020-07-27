@@ -1,0 +1,112 @@
+{% extends 'MAIN/main.html' %}
+{% load static %}
+
+
+{% block title %} {{ company.brand_name }} | Settings {% endblock title %}
+    
+
+{% block css %}
+
+{% endblock css %}
+
+
+{% block brand %} {{ company.brand_name }} {% endblock brand %}
+    
+
+{% block content %}
+{% if request.user.is_superuser %}
+<div class="content">
+
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'SETTINGS:settings' %}">Settings</a></li>
+                        <li class="breadcrumb-item">Daily Report Contact Method</li>
+                        <li class="breadcrumb-item">Edit</li>
+                    </ol>
+                </div>
+                <h4 class="page-title"> Edit Daily Report Contact Method </h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-12">
+    
+                                {% for field in form %}
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label>{{ field.label }} {% if field.field.required %} <span class="text-danger">*</span> {% endif %} </label>
+                                                {{ field }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+    
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-6">
+                                <a href="{% url 'SETTINGS:settings' %}" class="btn text-muted d-none d-sm-inline-block btn-link font-weight-semibold">
+                                    <i class="mdi mdi-arrow-left"></i> Back to Settings 
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="text-sm-right">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="mdi mdi-twitter-retweet mr-1"></i>Update
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Permission Denied</a></li>
+                        <li class="breadcrumb-item active">Settings</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Settings</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="text-center">
+                <h3 class="">Permission Denied !</h3>
+                <p class="text-muted mt-3">Sorry, you don't have permission to edit daily report contact method data.</p>
+                <a class="btn btn-primary btn-sm mt-2" href="/"><i class="mdi mdi-home mr-1"></i>Back To Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}
+
+
+{% block script %}
+
+{% endblock script %}

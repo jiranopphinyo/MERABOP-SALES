@@ -1,0 +1,324 @@
+{% extends 'MAIN/main.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %} {{ company.brand_name }} | {{ quotation.id }} Details {% endblock title %}
+
+
+{% block css %}
+    
+{% endblock css %}
+    
+
+{% block brand %} {{ company.brand_name }} {% endblock brand %}
+    
+
+{% block content %}
+{% if perms.SALES.view_quotation %}
+<div class="content">
+                        
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'SALES:quotation_list' %}">Quotation</a></li>
+                        <li class="breadcrumb-item active">Details</li>
+                    </ol>
+                </div>
+                <h4 class="page-title"> {{ quotation }} | {{ quotation.customer }} </h4>
+            </div>
+        </div>
+    </div>     
+    <!-- end page title --> 
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-10 col-sm-11">
+
+            <div class="horizontal-steps mt-4 mb-4 pb-5">
+                <div class="horizontal-steps-content">
+                    {% for status in quotation_status %}
+                    
+                        {% if last_status_log %}
+                            <div class="step-item {% if last_status_log.status.quotation_status == status.quotation_status %} current {% else %}{% endif %}">
+                                <span> {{ status }} </span>
+                            </div>
+                        {% else %}
+                            <div class="step-item">
+                                <span> {{ status }} </span>
+                            </div>
+                        {% endif %}
+
+                    {% endfor %}
+                </div>
+
+                <div class="process-line" style="width: {{ percent }}%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-xl-6 col-3"></div>
+                        <div class="col-xl-2 col-3">
+                            <a class="btn btn-outline-secondary btn-block mr-1" href="{% url 'SALES:quotation_print' quotation.id %}"><i class="mdi mdi-file-search-outline"></i><span class="d-none d-xl-inline ml-1">Preview</span></a>
+                        </div>
+                        <div class="col-xl-2 col-3">
+                            <a class="btn btn-outline-primary btn-block mr-1" href="{% url 'SALES:quotation_update_after_create' quotation.id %}"><i class="mdi mdi-file-edit-outline"></i><span class="d-none d-xl-inline ml-1">Edit</span></a>
+                        </div>
+                        <div class="col-xl-2 col-3">
+                            <button class="btn btn-outline-primary btn-block" data-toggle="modal" data-target="#add-status-modal"><i class="mdi mdi-progress-upload"></i><span class="d-none d-xl-inline ml-1">Add Status</span></button>
+                        </div>
+
+                        <div id="add-status-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-header modal-colored-header bg-primary">
+                                    <h4 class="modal-title" id="primary-header-modalLabel">Add Status</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                </div>
+                                <div class="modal-content">
+
+                                    <div class="modal-body">
+
+                                        <form class="pl-3 pr-3" action="#" method="POST">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label>{{ form.quotation.label }} {% if form.quotation.field.required %} <span class="text-danger">*</span> {% endif %} </label>
+                                                {{ form.quotation }}
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>{{ form.status.label }} {% if form.status.field.required %} <span class="text-danger">*</span> {% endif %} </label>
+                                                {{ form.status }}
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>{{ form.user.label }} {% if form.user.field.required %} <span class="text-danger">*</span> {% endif %} </label>
+                                                {{ form.user }}
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>{{ form.remark.label }} {% if form.remark.field.required %} <span class="text-danger">*</span> {% endif %} </label>
+                                                {{ form.remark }}
+                                            </div>
+
+                                            <div class="form-group text-right">
+                                                <button class="btn btn-primary" type="submit">Add Status</button>
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="header-title mb-3">Billing Information</h4>
+
+                    <h5> {{ quotation.customer.name }} </h5>
+                    
+                    <address class="mb-0 font-14 address-lg">
+                        {{ quotation.customer_billing_address.address_line_1 }} {% if quotation.customer_billing_address.address_line_2 %} {{ quotation.customer_billing_address.address_line_2 }} {% else %}{% endif %} <br>
+                        {{ quotation.customer_billing_address.sub_district }}, {{ quotation.customer_billing_address.district }}, {{ quotation.customer_billing_address.province }} <br>
+                        {{ quotation.customer_billing_address.postal_code }} {{ quotation.customer_billing_address.country }} <br>
+                        <abbr title="Phone">P:</abbr> {{ quotation.customer_billing_address.phone }}
+                    </address>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="header-title mb-3">Contact Information</h4>
+
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <p class="mb-2"><span class="font-weight-bold mr-2">Fullname:</span> {{ quotation.customer_contact_person.fullname }} </p>
+                            <p class="mb-2"><span class="font-weight-bold mr-2">Job Title:</span> {{ quotation.customer_contact_person.job_title }} </p>
+                            <p class="mb-2"><span class="font-weight-bold mr-2">Email:</span> {{ quotation.customer_contact_person.email }} </p>
+                            <p class="mb-0"><span class="font-weight-bold mr-2">Phone:</span> {{ quotation.customer_contact_person.phone }} </p>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="header-title mb-3">Quotation Information</h4>
+
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <p class="mb-2"><span class="font-weight-bold mr-2">Quotation ID:</span> #{{ quotation.id }} </p>
+                            <p class="mb-2"><span class="font-weight-bold mr-2">Date:</span> {{ quotation.date|date:"d/m/Y" }} </p>
+                            <p class="mb-2"><span class="font-weight-bold mr-2">Valid:</span> {{ quotation.valid_until|date:"d/m/Y" }} </p>
+                            <p class="mb-0"><span class="font-weight-bold mr-2">Estimate Delivery Day:</span> {{ quotation.estimate_delivery_day }} Days </p>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+
+                    {% if perms.SALES.add_quotationitem %}
+                        <div class="dropdown float-right">
+                            <a href="#" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown" aria-expanded="false">
+                                <i class="mdi mdi-dots-vertical"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                
+                                {% if perms.SALES.add_quotationitem %}
+                                <!-- item-->
+                                <a href="{% url 'SALES:quotation_item_create_after_create' quotation.id %}" class="dropdown-item">Add Item</a>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <h4 class="header-title mb-3">Items from Quotation #{{ quotation.id }}</h4>
+
+                    <div class="table-responsive">
+                        <table class="table table-centered table-hover mb-0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Item</th>
+                                    <th class="text-right">Quantity</th>
+                                    <th class="text-right">Price</th>
+                                    <th class="text-right">Total</th>
+                                    <th style="width: 100px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                {% for item in quotation_items %}
+                                <tr>
+                                    <td><span data-toggle="tooltip"
+                                        data-placement="right" title=""
+                                        data-original-title="{{ item.product.name }}"> {{ item.product.name|truncatechars:30 }} </span></td>
+                                    <td class="text-right"> {{ item.quantity|floatformat:"0"|intcomma }} </td>
+                                    <td class="text-right"> {{ item.unit_price|floatformat:"0"|intcomma }} </td>
+                                    <td class="text-right"> {{ item.amount|floatformat:"0"|intcomma }} </td>
+                                    <td>
+                                        
+                                        {% if perms.SALES.change_quotationitem %}
+                                        <a href="{% url 'SALES:quotation_item_update' item.id %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                        {% endif %}
+                                        {% if perms.SALES.delete_quotationitem %}
+                                        <a href="{% url 'SALES:quotation_item_delete' item.id %}" class="action-icon"> <i class="mdi mdi-delete"></i></a>
+                                        {% endif %}
+                                            
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                    
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="header-title mb-3">Quotation Summary</h4>
+
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>Description</th>
+                                <th class="text-right">Price</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Sub Total :</td>
+                                <td class="text-right"> {{ quotation.sub_total|floatformat:"2"|intcomma }} </td>
+                            </tr>
+                            <tr>
+                                <td>Special Discount :</td>
+                                <td class="text-right"> - {{ quotation.discount|floatformat:"2"|intcomma }} </td>
+                            </tr>
+                            <tr>
+                                <td>After Discount : </td>
+                                <td class="text-right"> {{ quotation.after_discount|floatformat:"2"|intcomma }} </td>
+                            </tr>
+                            <tr>
+                                <td>VAT : </td>
+                                <td class="text-right"> {{ quotation.vat|floatformat:"2"|intcomma }} </td>
+                            </tr>
+                            <tr>
+                                <th>Net Total :</th>
+                                <th class="text-right"> {{ quotation.net_total|floatformat:"2"|intcomma }} </th>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% else %}
+<div class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Permission Denied</a></li>
+                        <li class="breadcrumb-item active">Quotation</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">Add Quotation</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="text-center">
+                <h3 class="">Permission Denied !</h3>
+                <p class="text-muted mt-3">Sorry, you don't have permission to add quotation data.</p>
+                <a class="btn btn-primary btn-sm mt-2" href="/"><i class="mdi mdi-home mr-1"></i>Back To Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}
+    
+
+{% block script %}
+
+{% endblock script %}

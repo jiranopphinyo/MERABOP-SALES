@@ -1,0 +1,7 @@
+{% if billing_address %}
+    {% for address in billing_address %}
+    <option value="{{ address.id }}">{{ address }}</option>
+    {% endfor %}
+{% else %}
+    <option value="">--------------------</option>
+{% endif %}

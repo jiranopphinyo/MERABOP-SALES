@@ -1,0 +1,7 @@
+{% if payment_terms %}
+    {% for payment_term in payment_terms %}
+    <option value="{{ payment_term.id }}">{{ payment_term }}</option>
+    {% endfor %}
+{% else %}
+<option value="">--------------------</option>
+{% endif %}
